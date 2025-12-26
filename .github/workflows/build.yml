@@ -1,0 +1,33 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+        
+    - name: Install dependencies
+      run: |
+        pip install icalendar pytz pyinstaller
+        
+    - name: Build executable
+      run: |
+        pyinstaller --onefile calendar-calc.py
+        
+    - name: Upload executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: calendar-calc-windows
+        path: dist/parse_calendar.exe
